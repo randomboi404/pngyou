@@ -1,0 +1,21 @@
+[package]
+name = "pngyou"
+version = "0.1.0-dev"
+edition = "2024"
+authors = ["randomboi404 <admin@randomboi404.is-a.dev>"]
+description = "A simple, high-performance CLI tool to hide secret messages in a PNG file using steganography."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/randomboi404/pngyou"
+readme = "README.md"
+keywords = ["png", "steganography", "cli", "security"]
+categories = ["command-line-utilities", "cryptography"]
+
+[dependencies]
+anyhow = "1.0.100"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
