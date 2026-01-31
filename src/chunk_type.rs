@@ -2,7 +2,7 @@ use anyhow::{Error, bail};
 use std::fmt::{Display, Error as FmtError, Formatter};
 use std::str::FromStr;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Clone, Eq, Debug)]
 pub(crate) struct ChunkType {
     bytes: [u8; 4],
 }
