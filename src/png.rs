@@ -72,6 +72,13 @@ impl Png {
         self.chunks.push(chunk);
     }
 
+    pub fn chunks_by_type(&self, chunk_type: &ChunkType) -> Vec<&Chunk> {
+        self.chunks
+            .iter()
+            .filter(|c| c.chunk_type() == chunk_type)
+            .collect()
+    }
+
     pub fn remove_first_chunk(&mut self, chunk_type: &str) -> Result<Chunk> {
         if self.chunks.is_empty() {
             bail!("No chunks to remove from!");
