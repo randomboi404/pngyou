@@ -1,6 +1,6 @@
 [package]
 name = "pngyou"
-version = "0.1.0-dev"
+version = "0.1.0"
 edition = "2024"
 authors = ["randomboi404 <admin@randomboi404.is-a.dev>"]
 description = "A simple, high-performance CLI tool to hide secret messages in a PNG file using steganography."
