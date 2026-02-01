@@ -1,6 +1,6 @@
 [package]
 name = "pngyou"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["randomboi404 <admin@randomboi404.is-a.dev>"]
 description = "A simple, high-performance CLI tool to hide secret messages in a PNG file using steganography."
@@ -14,6 +14,7 @@ categories = ["command-line-utilities", "cryptography"]
 anyhow = "1.0.100"
 clap = { version = "4.5.56", features = ["derive"] }
 crc = "3.4.0"
+ureq = { version = "3.1.4", default-features = false, features = ["rustls"] }
 
 [profile.release]
 opt-level = 3

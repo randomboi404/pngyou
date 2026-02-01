@@ -35,7 +35,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-pngyou = "0.1"
+pngyou = "0.2"
 ```
 
 OR,
@@ -56,5 +56,5 @@ cargo install pngyou
 - [x] **Remove:** Strip custom chunks from files.
 - [ ] **Format Support:** Support for other chunk-based formats.
 - [ ] **Detection:** Automated scanning for hidden data.
-- [ ] **URL Inputs:** Support for automatically fetching an image from the internet.
+- [x] **URL Inputs:** Support for automatically fetching an image from the internet.
 - [ ] **Obfuscation:** Automatically obfuscate your messages before encoding.

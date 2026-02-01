@@ -1,6 +1,8 @@
+use anyhow::Error;
 use clap::{Parser, Subcommand};
 use pngyou::ChunkType;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 #[derive(Parser)]
 #[command(name = "PNG You!")]
@@ -15,7 +17,7 @@ pub enum Commands {
     /// encode the given file.
     Encode {
         /// path of file to encode.
-        input: PathBuf,
+        input: InputImage,
 
         /// path to output encoded file.
         #[arg(short, long)]
@@ -33,7 +35,7 @@ pub enum Commands {
     /// decode the given file.
     Decode {
         /// path of file to decode.
-        input: PathBuf,
+        input: InputImage,
 
         /// chunk type to decode.
         #[arg(short, long)]
@@ -43,7 +45,7 @@ pub enum Commands {
     /// remove encoded message from the given file.
     Remove {
         /// path of file to remove the message from.
-        input: PathBuf,
+        input: InputImage,
 
         /// path to output modified file.
         #[arg(short, long)]
@@ -57,6 +59,24 @@ pub enum Commands {
     /// print the file as a raw sequence of bytes.
     Print {
         /// path of file to print.
-        input: PathBuf,
+        input: InputImage,
     },
+}
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub enum InputImage {
+    File(PathBuf),
+    Url(String),
+}
+
+impl FromStr for InputImage {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.starts_with("https://") || s.starts_with("http://") {
+            Ok(Self::Url(String::from(s)))
+        } else {
+            Ok(Self::File(PathBuf::from(s)))
+        }
+    }
 }
