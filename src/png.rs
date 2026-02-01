@@ -79,7 +79,7 @@ impl Png {
             .collect()
     }
 
-    pub fn remove_first_chunk(&mut self, chunk_type: &str) -> Result<Chunk> {
+    pub fn remove_first_chunk(&mut self, chunk_type: &ChunkType) -> Result<Chunk> {
         if self.chunks.is_empty() {
             bail!("No chunks to remove from!");
         }
@@ -87,7 +87,7 @@ impl Png {
         let index = match self
             .chunks
             .iter()
-            .position(|c| c.chunk_type().to_string() == chunk_type)
+            .position(|c| c.chunk_type() == chunk_type)
         {
             Some(i) => i,
             None => bail!("Chunk of type '{}' not found.", chunk_type),
@@ -254,8 +254,9 @@ mod tests {
     #[test]
     fn test_remove_first_chunk() {
         let mut png = testing_png();
+        let chunk_type = ChunkType::from_str("TeSt").unwrap();
         png.append_chunk(chunk_from_strings("TeSt", "Message").unwrap());
-        png.remove_first_chunk("TeSt").unwrap();
+        png.remove_first_chunk(chunk_type).unwrap();
         let chunk = png.chunk_by_type("TeSt");
         assert!(chunk.is_none());
     }
