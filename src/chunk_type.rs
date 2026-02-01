@@ -41,10 +41,6 @@ impl FromStr for ChunkType {
             bail!("Not a valid ascii alphabetic character string.");
         }
 
-        if !chunk_type.is_valid() {
-            bail!("Invalid chunk type.");
-        }
-
         Ok(chunk_type)
     }
 }
