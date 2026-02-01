@@ -66,10 +66,11 @@ impl Display for Chunk {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), FmtError> {
         write!(
             f,
-            "Length: {}\nChunk Type: {}\nData: {:#?}\nCRC: {}\n",
+            "Length: {}\nChunk Type: {}\nData (Bytes): {:#?}\nData (String): {}\nCRC: {}\n",
             self.length(),
             self.chunk_type,
             self.data,
+            self.data.iter().map(|b| *b as char).collect::<String>(),
             self.crc()
         )
     }
