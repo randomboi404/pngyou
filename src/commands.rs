@@ -22,7 +22,10 @@ pub fn encode(
 
     match output {
         Some(output) => Ok(fs::write(output, png.as_bytes())?),
-        None => Ok(println!("{}", png)),
+        None => {
+            println!("{}", png);
+            Ok(())
+        }
     }
 }
 
@@ -30,7 +33,7 @@ pub fn decode(input: &PathBuf, chunk_type: &ChunkType) -> Result<()> {
     let png = get_png(input)?;
 
     let chunks = png.chunks_by_type(chunk_type);
-    if chunks.len() == 0 {
+    if chunks.is_empty() {
         bail!("No chunk found of type:\n{}", chunk_type);
     }
 

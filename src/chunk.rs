@@ -82,10 +82,8 @@ impl Chunk {
     /// Creates a new [Chunk] instance from chunk type and data bytes.
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Chunk {
         let length = data.len();
-        u32::try_from(length).expect(&format!(
-            "Chunk data is too big! Max size is: {} bytes",
-            u32::MAX
-        ));
+        u32::try_from(length)
+            .unwrap_or_else(|_| panic!("Chunk data is too big! Max size is: {} bytes", u32::MAX));
 
         let mut bytes = Vec::with_capacity(4 + length);
 

@@ -67,9 +67,7 @@ impl Png {
 
     /// Creates a new [Png] instance from a vector of existing chunks.
     pub fn from_chunks(chunks: Vec<Chunk>) -> Png {
-        Self {
-            chunks: chunks.into(),
-        }
+        Self { chunks }
     }
 
     /// Appends a new chunk to existing list of chunks.
@@ -124,13 +122,10 @@ impl Png {
             Err(_) => return None,
         };
 
-        for chunk in &self.chunks {
-            if chunk_type == *chunk.chunk_type() {
-                return Some(chunk);
-            }
-        }
-
-        None
+        self.chunks
+            .iter()
+            .find(|&chunk| chunk_type == *chunk.chunk_type())
+            .map(|v| v as _)
     }
 
     /// Converts the entire PNG struct back to raw bytes.

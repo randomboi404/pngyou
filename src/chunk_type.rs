@@ -48,7 +48,7 @@ impl FromStr for ChunkType {
 
 impl Display for ChunkType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), FmtError> {
-        if let Some(s) = str::from_utf8(&self.bytes).ok() {
+        if let Ok(s) = str::from_utf8(&self.bytes) {
             return write!(f, "{}", s);
         }
         Ok(())
