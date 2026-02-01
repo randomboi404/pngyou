@@ -3,7 +3,7 @@ use std::fmt::{Display, Error as FmtError, Formatter};
 use std::str::FromStr;
 
 #[derive(PartialEq, Clone, Eq, Debug)]
-pub(crate) struct ChunkType {
+pub struct ChunkType {
     bytes: [u8; 4],
 }
 
@@ -38,7 +38,11 @@ impl FromStr for ChunkType {
             chunk_type.bytes[i] = b;
             true
         }) {
-            bail!("Not a valid utf-8 string.");
+            bail!("Not a valid ascii alphabetic character string.");
+        }
+
+        if !chunk_type.is_valid() {
+            bail!("Invalid chunk type.");
         }
 
         Ok(chunk_type)
@@ -55,27 +59,27 @@ impl Display for ChunkType {
 }
 
 impl ChunkType {
-    pub(crate) fn bytes(&self) -> [u8; 4] {
+    pub fn bytes(&self) -> [u8; 4] {
         self.bytes
     }
 
-    pub(crate) fn is_valid(&self) -> bool {
+    pub fn is_valid(&self) -> bool {
         self.bytes.iter().all(|b| b.is_ascii_alphabetic()) && self.is_reserved_bit_valid()
     }
 
-    pub(crate) fn is_critical(&self) -> bool {
+    pub fn is_critical(&self) -> bool {
         self.bytes[0].is_ascii_uppercase()
     }
 
-    pub(crate) fn is_public(&self) -> bool {
+    pub fn is_public(&self) -> bool {
         self.bytes[1].is_ascii_uppercase()
     }
 
-    pub(crate) fn is_reserved_bit_valid(&self) -> bool {
+    pub fn is_reserved_bit_valid(&self) -> bool {
         self.bytes[2] & 0b00100000 == 0
     }
 
-    pub(crate) fn is_safe_to_copy(&self) -> bool {
+    pub fn is_safe_to_copy(&self) -> bool {
         self.bytes[3].is_ascii_lowercase()
     }
 }

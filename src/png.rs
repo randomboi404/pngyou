@@ -4,7 +4,7 @@ use anyhow::{Error, Result, bail};
 use std::fmt::{Display, Error as FmtError, Formatter};
 use std::str::FromStr;
 
-pub(crate) struct Png {
+pub struct Png {
     chunks: Vec<Chunk>,
 }
 
@@ -60,24 +60,23 @@ impl Display for Png {
 }
 
 impl Png {
-    pub(crate) const STANDARD_HEADER: [u8; 8] = [137, 80, 78, 71, 13, 10, 26, 10];
+    const STANDARD_HEADER: [u8; 8] = [137, 80, 78, 71, 13, 10, 26, 10];
 
-    pub(crate) fn from_chunks(chunks: Vec<Chunk>) -> Png {
+    pub fn from_chunks(chunks: Vec<Chunk>) -> Png {
         Self {
             chunks: chunks.into(),
         }
     }
 
-    pub(crate) fn append_chunk(&mut self, chunk: Chunk) {
+    pub fn append_chunk(&mut self, chunk: Chunk) {
         self.chunks.push(chunk);
     }
 
-    pub(crate) fn remove_first_chunk(&mut self, chunk_type: &str) -> Result<Chunk> {
+    pub fn remove_first_chunk(&mut self, chunk_type: &str) -> Result<Chunk> {
         if self.chunks.is_empty() {
             bail!("No chunks to remove from!");
         }
 
-        let chunk_type_to_remove = ChunkType::from_str(chunk_type)?;
         let index = match self
             .chunks
             .iter()
@@ -90,15 +89,15 @@ impl Png {
         Ok(self.chunks.remove(index))
     }
 
-    pub(crate) fn header(&self) -> &[u8; 8] {
+    pub fn header(&self) -> &[u8; 8] {
         &Self::STANDARD_HEADER
     }
 
-    pub(crate) fn chunks(&self) -> &[Chunk] {
+    pub fn chunks(&self) -> &[Chunk] {
         self.chunks.as_slice()
     }
 
-    pub(crate) fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
+    pub fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
         let chunk_type = match ChunkType::from_str(chunk_type) {
             Ok(chunk_type) => chunk_type,
             Err(_) => return None,
@@ -113,7 +112,7 @@ impl Png {
         None
     }
 
-    pub(crate) fn as_bytes(&self) -> Vec<u8> {
+    pub fn as_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::<u8>::new();
 
         bytes.extend_from_slice(&Self::STANDARD_HEADER);

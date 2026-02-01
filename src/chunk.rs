@@ -4,7 +4,7 @@ use crc::{CRC_32_ISO_HDLC, Crc};
 use std::fmt::{Display, Error as FmtError, Formatter};
 
 #[derive(PartialEq, Eq, Clone, Debug)]
-pub(crate) struct Chunk {
+pub struct Chunk {
     length: [u8; 4],
     chunk_type: ChunkType,
     data: Vec<u8>,
@@ -25,7 +25,7 @@ impl TryFrom<&[u8]> for Chunk {
 
         length.copy_from_slice(&bytes[0..4]);
         chunk_type_bytes.copy_from_slice(&bytes[4..8]);
-        data = bytes[8..(bytes.len() - 4)].to_vec();
+        data.extend_from_slice(&bytes[8..(bytes.len() - 4)]);
 
         let expected_length = u32::from_be_bytes(length) as usize;
         if data.len() != expected_length {
@@ -76,7 +76,7 @@ impl Display for Chunk {
 }
 
 impl Chunk {
-    pub(crate) fn new(chunk_type: ChunkType, data: Vec<u8>) -> Chunk {
+    pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Chunk {
         let length = data.len();
         u32::try_from(length).expect(&format!(
             "Chunk data is too big! Max size is: {} bytes",
@@ -99,27 +99,27 @@ impl Chunk {
         }
     }
 
-    pub(crate) fn length(&self) -> u32 {
+    pub fn length(&self) -> u32 {
         u32::from_be_bytes(self.length)
     }
 
-    pub(crate) fn chunk_type(&self) -> &ChunkType {
+    pub fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
 
-    pub(crate) fn data(&self) -> &[u8] {
+    pub fn data(&self) -> &[u8] {
         &self.data
     }
 
-    pub(crate) fn crc(&self) -> u32 {
+    pub fn crc(&self) -> u32 {
         u32::from_be_bytes(self.crc)
     }
 
-    pub(crate) fn data_as_string(&self) -> Result<String> {
+    pub fn data_as_string(&self) -> Result<String> {
         Ok(str::from_utf8(&self.data)?.to_string())
     }
 
-    pub(crate) fn as_bytes(&self) -> Vec<u8> {
+    pub fn as_bytes(&self) -> Vec<u8> {
         let data_len = self.data.len();
         let mut bytes = Vec::with_capacity(12 + data_len);
 
