@@ -256,7 +256,7 @@ mod tests {
         let mut png = testing_png();
         let chunk_type = ChunkType::from_str("TeSt").unwrap();
         png.append_chunk(chunk_from_strings("TeSt", "Message").unwrap());
-        png.remove_first_chunk(chunk_type).unwrap();
+        png.remove_first_chunk(&chunk_type).unwrap();
         let chunk = png.chunk_by_type("TeSt");
         assert!(chunk.is_none());
     }
