@@ -4,6 +4,9 @@ use anyhow::{Error, Result, bail};
 use std::fmt::{Display, Error as FmtError, Formatter};
 use std::str::FromStr;
 
+/// The [Png] struct represents a full PNG file
+/// along with its standard 8 bits header and sequence of chunks.
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Png {
     chunks: Vec<Chunk>,
 }
@@ -62,16 +65,19 @@ impl Display for Png {
 impl Png {
     const STANDARD_HEADER: [u8; 8] = [137, 80, 78, 71, 13, 10, 26, 10];
 
+    /// Creates a new [Png] instance from a vector of existing chunks.
     pub fn from_chunks(chunks: Vec<Chunk>) -> Png {
         Self {
             chunks: chunks.into(),
         }
     }
 
+    /// Appends a new chunk to existing list of chunks.
     pub fn append_chunk(&mut self, chunk: Chunk) {
         self.chunks.push(chunk);
     }
 
+    /// Returns a list of all the chunks of a specific chunk type.
     pub fn chunks_by_type(&self, chunk_type: &ChunkType) -> Vec<&Chunk> {
         self.chunks
             .iter()
@@ -79,6 +85,11 @@ impl Png {
             .collect()
     }
 
+    /// Removes the first matching chunk of a particular type.
+    ///
+    /// # Error
+    /// Returns an error if there are no chunks or
+    /// the chunk of requested type is not found.
     pub fn remove_first_chunk(&mut self, chunk_type: &ChunkType) -> Result<Chunk> {
         if self.chunks.is_empty() {
             bail!("No chunks to remove from!");
@@ -96,14 +107,17 @@ impl Png {
         Ok(self.chunks.remove(index))
     }
 
+    /// Returns the standard 8 bits header for a PNG file.
     pub fn header(&self) -> &[u8; 8] {
         &Self::STANDARD_HEADER
     }
 
+    /// Returns a slice of existing chunks.
     pub fn chunks(&self) -> &[Chunk] {
         self.chunks.as_slice()
     }
 
+    /// Get the first matching chunk of a particular type.
     pub fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
         let chunk_type = match ChunkType::from_str(chunk_type) {
             Ok(chunk_type) => chunk_type,
@@ -119,6 +133,7 @@ impl Png {
         None
     }
 
+    /// Converts the entire PNG struct back to raw bytes.
     pub fn as_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::<u8>::new();
 

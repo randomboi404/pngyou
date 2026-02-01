@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use pngyou::{Chunk, ChunkType, Png};
 use std::fs;
 use std::path::PathBuf;
@@ -28,12 +28,12 @@ pub fn encode(
 
 pub fn decode(input: &PathBuf, chunk_type: &ChunkType) -> Result<()> {
     let png = get_png(input)?;
-    
+
     let chunks = png.chunks_by_type(chunk_type);
     if chunks.len() == 0 {
         bail!("No chunk found of type:\n{}", chunk_type);
     }
-    
+
     chunks.into_iter().for_each(|chunk| {
         if let Ok(message) = String::from_utf8(chunk.data().to_vec()) {
             println!("{}", message);
@@ -47,7 +47,7 @@ pub fn decode(input: &PathBuf, chunk_type: &ChunkType) -> Result<()> {
 pub fn remove(input: &PathBuf, output: &Option<PathBuf>, chunk_type: &ChunkType) -> Result<()> {
     let mut png = get_png(input)?;
     png.remove_first_chunk(chunk_type)?;
-    
+
     match output {
         Some(output) => Ok(fs::write(output, png.as_bytes())?),
         None => Ok(fs::write(input, png.as_bytes())?),

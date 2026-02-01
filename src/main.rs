@@ -1,3 +1,8 @@
+//! PNG You! CLI
+//!
+//! This binary provides a command-line interface for hiding and extracting
+//! data inside PNG files using the `pngyou` library.
+
 mod args;
 mod commands;
 

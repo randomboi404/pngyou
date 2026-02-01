@@ -2,6 +2,7 @@ use anyhow::{Error, bail};
 use std::fmt::{Display, Error as FmtError, Formatter};
 use std::str::FromStr;
 
+/// The [ChunkType] struct represents the type of a particular chunk.
 #[derive(PartialEq, Clone, Eq, Debug)]
 pub struct ChunkType {
     bytes: [u8; 4],
@@ -55,26 +56,32 @@ impl Display for ChunkType {
 }
 
 impl ChunkType {
+    /// Returns the chunk type as bytes.
     pub fn bytes(&self) -> [u8; 4] {
         self.bytes
     }
 
+    /// Checks validity of the chunk type.
     pub fn is_valid(&self) -> bool {
         self.bytes.iter().all(|b| b.is_ascii_alphabetic()) && self.is_reserved_bit_valid()
     }
 
+    /// Checks if the chunk type is critical.
     pub fn is_critical(&self) -> bool {
         self.bytes[0].is_ascii_uppercase()
     }
 
+    /// Checks if the chunk type is public.
     pub fn is_public(&self) -> bool {
         self.bytes[1].is_ascii_uppercase()
     }
 
+    /// Checks if the reserved bit of the chunk type is valid.
     pub fn is_reserved_bit_valid(&self) -> bool {
         self.bytes[2] & 0b00100000 == 0
     }
 
+    /// Checks if the chunk is safe to copy.
     pub fn is_safe_to_copy(&self) -> bool {
         self.bytes[3].is_ascii_lowercase()
     }

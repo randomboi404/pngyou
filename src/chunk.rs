@@ -3,6 +3,8 @@ use anyhow::{Error, Result, bail};
 use crc::{CRC_32_ISO_HDLC, Crc};
 use std::fmt::{Display, Error as FmtError, Formatter};
 
+/// The [Chunk] struct represents a particular chunk
+/// for a PNG file.
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Chunk {
     length: [u8; 4],
@@ -77,6 +79,7 @@ impl Display for Chunk {
 }
 
 impl Chunk {
+    /// Creates a new [Chunk] instance from chunk type and data bytes.
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Chunk {
         let length = data.len();
         u32::try_from(length).expect(&format!(
@@ -100,26 +103,32 @@ impl Chunk {
         }
     }
 
+    /// Returns the length of the chunk.
     pub fn length(&self) -> u32 {
         u32::from_be_bytes(self.length)
     }
 
+    /// Returns the type of the chunk.
     pub fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
 
+    /// Returns the data of the chunk as slice of bytes.
     pub fn data(&self) -> &[u8] {
         &self.data
     }
 
+    /// Returns the CRC of the chunk.
     pub fn crc(&self) -> u32 {
         u32::from_be_bytes(self.crc)
     }
 
+    /// Returns the data of the chunk as a String.
     pub fn data_as_string(&self) -> Result<String> {
         Ok(str::from_utf8(&self.data)?.to_string())
     }
 
+    /// Returns the chunk as a list of bytes.
     pub fn as_bytes(&self) -> Vec<u8> {
         let data_len = self.data.len();
         let mut bytes = Vec::with_capacity(12 + data_len);
